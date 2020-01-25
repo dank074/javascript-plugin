@@ -1,0 +1,5 @@
+{
+  "main" : "com.skeletor.plugin.main",
+  "name" : "Javascript Plugin",
+  "author" : "skeletor"
+}
