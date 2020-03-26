@@ -3,6 +3,7 @@ package com.skeletor.plugin.communication;
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.skeletor.plugin.communication.incoming.IncomingWebMessage;
+import com.skeletor.plugin.communication.incoming.audio.*;
 import com.skeletor.plugin.communication.incoming.common.MoveAvatarEvent;
 import com.skeletor.plugin.communication.incoming.common.RequestCreditsEvent;
 import com.skeletor.plugin.communication.incoming.common.RequestSpinSlotMachineEvent;
@@ -29,6 +30,12 @@ public class CommunicationManager {
         this.registerMessage("move_avatar", MoveAvatarEvent.class);
         this.registerMessage("request_credits", RequestCreditsEvent.class);
         this.registerMessage("spin_slot_machine", RequestSpinSlotMachineEvent.class);
+        this.registerMessage("add_song", AddSongEvent.class);
+        this.registerMessage("next_song", NextSongEvent.class);
+        this.registerMessage("prev_song", PreviousSongEvent.class);
+        this.registerMessage("play_stop", PlayStopEvent.class);
+        this.registerMessage("remove_song", RemoveSongEvent.class);
+        this.registerMessage("song_ended", SongEndedEvent.class);
     }
 
     public void registerMessage(String key, Class<? extends IncomingWebMessage> message) {

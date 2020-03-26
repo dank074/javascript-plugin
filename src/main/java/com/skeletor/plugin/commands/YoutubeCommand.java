@@ -16,7 +16,7 @@ public class YoutubeCommand extends Command {
     public boolean handle(GameClient gameClient, String[] strings) throws Exception {
         Room room = gameClient.getHabbo().getHabboInfo().getCurrentRoom();
 
-        if(room.hasRights(gameClient.getHabbo())) {
+        if(room.hasRights(gameClient.getHabbo()) || gameClient.getHabbo().getHabboInfo().getRank().getName().equals("VIP")) {
             if (strings.length > 1) {
                 String videoId = RegexUtility.getYouTubeId(strings[1]);
                 if(videoId.isEmpty()) {
@@ -28,6 +28,7 @@ public class YoutubeCommand extends Command {
                 return true;
             }
         }
-        return false;
+        gameClient.getHabbo().whisper("You do not have permission to use this command in this room");
+        return true;
     }
 }
