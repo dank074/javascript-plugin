@@ -21,7 +21,7 @@ public class MoveAvatarEvent extends IncomingWebMessage<MoveAvatarEvent.JSONMove
 
         switch (message.direction) {
             case "stop":
-                client.getHabbo().getRoomUnit().stopWalking();
+                //client.getHabbo().getRoomUnit().stopWalking();
                 //client.getHabbo().getRoomUnit().removeStatus(RoomUnitStatus.MOVE);
                 return;
             case "left":
@@ -44,6 +44,8 @@ public class MoveAvatarEvent extends IncomingWebMessage<MoveAvatarEvent.JSONMove
             if(goal == null)
                 return;
             if (goal.isWalkable() || client.getHabbo().getHabboInfo().getCurrentRoom().canSitOrLayAt(goal.x, goal.y)) {
+                if (client.getHabbo().getRoomUnit().getMoveBlockingTask() != null) client.getHabbo().getRoomUnit().getMoveBlockingTask().get();
+
                 client.getHabbo().getRoomUnit().setGoalLocation(goal);
             }
         } catch(Exception e) {
