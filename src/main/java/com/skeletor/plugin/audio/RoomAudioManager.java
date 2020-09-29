@@ -29,7 +29,6 @@ public class RoomAudioManager {
 
     public void Dispose() {
         this.roomAudio.clear();
-        _instance = null;
     }
 
     public static RoomAudioManager getInstance() {
