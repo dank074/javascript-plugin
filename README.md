@@ -16,3 +16,9 @@ Sending a message:
 ```js
 document.querySelector('object, embed').openroom(JSON.stringify({"header": "test", "data": {"name": "Efrain"}}))
 ```
+## Built in features
+- [x] Arrowkey walking
+- [x] Youtube jukebox (use interaction `yt_jukebox` on any furniture)
+- [x] Slots Machine (use interaction `slots_machine` on any furniture)
+- [x] :youtube command ```ALTER TABLE permissions
+    ADD COLUMN cmd_youtube enum('0','1') DEFAULT '1';```
