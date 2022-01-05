@@ -4,6 +4,7 @@ import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.InteractionDefault;
 import com.eu.habbo.habbohotel.rooms.Room;
+import com.eu.habbo.habbohotel.rooms.RoomTile;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.skeletor.plugin.javascript.communication.outgoing.slotmachine.SlotMachineComposer;
 import com.skeletor.plugin.javascript.override_packets.outgoing.JavascriptCallbackComposer;
@@ -37,8 +38,14 @@ public class InteractionSlotMachine extends InteractionDefault {
 
     @Override
     public void onClick(GameClient client, Room room, Object[] objects) throws Exception {
-        super.onClick(client, room, objects);
-        SlotMachineComposer webComposer = new SlotMachineComposer(this.getId(), client.getHabbo().getHabboInfo().getCredits());
-        client.sendResponse(new JavascriptCallbackComposer(webComposer));
+        RoomTile tile = room.getLayout().getTile(this.getX(), this.getY());
+        RoomTile tileInFront = room.getLayout().getTileInFront(tile, this.getRotation());
+
+        if(client.getHabbo().getRoomUnit().getCurrentLocation().is(tileInFront.x, tileInFront.y)) {
+            super.onClick(client, room, objects);
+            SlotMachineComposer webComposer = new SlotMachineComposer(this.getId(), client.getHabbo().getHabboInfo().getCredits());
+            client.sendResponse(new JavascriptCallbackComposer(webComposer));
+        }
+
     }
 }
