@@ -57,36 +57,51 @@ public class RequestSpinSlotMachineEvent extends IncomingWebMessage<RequestSpinS
             won = true;
             switch (result1) {
                 case LEMON:
-                    amountWon = 5 * message.bet;
+                    amountWon = 1 * message.bet;
                     break;
                 case MELON:
-                    amountWon = 6 * message.bet;
+                    amountWon = 3 * message.bet;
                     break;
                 case GRAPES:
-                    amountWon = 10 * message.bet;
+                    amountWon = 2 * message.bet;
                     break;
                 case CHERRY:
-                    amountWon = 15 * message.bet;
+                    amountWon = 6 * message.bet;
                     break;
                 case BAR:
-                    amountWon = 20 * message.bet;
+                    amountWon = 10 * message.bet;
                     break;
             }
             client.getHabbo().getHabboInfo().addCredits(amountWon);
         }
         else if(result1 == BAR && result2 == BAR) {
             won = true;
-            amountWon = 4 * message.bet;
+            amountWon = 2 * message.bet;
+            client.getHabbo().getHabboInfo().addCredits(amountWon);
+        }
+        else if(result1 == MELON && result2 == MELON) {
+            won = true;
+            amountWon = 1 * message.bet;
+            client.getHabbo().getHabboInfo().addCredits(amountWon);
+        }
+        else if(result1 == GRAPES && result2 == GRAPES) {
+            won = true;
+            amountWon = (int) (0.8 * message.bet);
+            client.getHabbo().getHabboInfo().addCredits(amountWon);
+        }
+        else if(result1 == LEMON && result2 == LEMON) {
+            won = true;
+            amountWon = (int) (0.5 * message.bet);
             client.getHabbo().getHabboInfo().addCredits(amountWon);
         }
         else if(result1 == CHERRY && result2 == CHERRY) {
             won = true;
-            amountWon = 3 * message.bet;
+            amountWon = 2 * message.bet;
             client.getHabbo().getHabboInfo().addCredits(amountWon);
         }
         else if(result1 == CHERRY) {
             won = true;
-            amountWon = 2 * message.bet;
+            amountWon = 1 * message.bet;
             client.getHabbo().getHabboInfo().addCredits(amountWon);
         }
         SpinResultComposer resultComposer = new SpinResultComposer(result1, result2, result3, won, amountWon);
