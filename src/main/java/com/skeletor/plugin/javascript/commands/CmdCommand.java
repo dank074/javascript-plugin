@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CmdCommand extends Command {
     public CmdCommand() {
-        super("cmd_commands", new String[] { "cmd", "command", "cmds", "commands" });
+        super("cmd_commands", new String[]{"cmd", "command", "cmds", "commands"});
     }
 
     @Override

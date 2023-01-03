@@ -34,42 +34,55 @@ public class main extends HabboPlugin implements EventListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(main.class);
     public static final int JSCALLBACKEVENTHEADER = 314;
 
-    public void onEnable () throws Exception {
+    public void onEnable() throws Exception {
         Emulator.getPluginManager().registerEvents(this, this);
-        if(Emulator.isReady && !Emulator.isShuttingDown) {
+        if (Emulator.isReady && !Emulator.isShuttingDown) {
             this.onEmulatorLoadedEvent(null);
         }
     }
 
     @EventHandler
-    public void onEmulatorLoadedEvent ( EmulatorLoadedEvent e ) throws Exception {
-        //register incoming message
-        Emulator.getGameServer().getPacketManager().registerHandler(JSCALLBACKEVENTHEADER, JavascriptCallbackEvent.class);
+    public void onEmulatorLoadedEvent(EmulatorLoadedEvent e) throws Exception {
+        // register incoming message
+        Emulator.getGameServer().getPacketManager().registerHandler(JSCALLBACKEVENTHEADER,
+                JavascriptCallbackEvent.class);
 
-        //register commands
+        Emulator.getTexts().register("javascript.cmd.youtube.keys", "roomvideo;youtube");
+        Emulator.getTexts().register("javascript.cmd.youtube.usage", "Usage: :roomvideo youtube.com/watch?v=videoId");
+        Emulator.getTexts().register("javascript.cmd.youtube.invalid", "Invalid youtube video url");
+        Emulator.getTexts().register("commands.description.cmd_youtube", ":youtube <VideoUrl>");
+
+        Emulator.getConfig().register("javascript.cmd.commands.enabled", "1");
+        // register commands
+
         CommandHandler.addCommand(new YoutubeCommand());
-        CommandHandler.addCommand(new CmdCommand());
+
+        if (Emulator.getConfig().getBoolean("javascript.cmd.commands.enabled", true)) {
+            CommandHandler.addCommand(new CmdCommand());
+        }
 
         // initialize singleton
         JSPlugin.init();
-
         LOGGER.info("PLUGIN - Javascript-Plugin has started!");
     }
 
     @EventHandler
     public void onLoadItemsManager(EmulatorLoadItemsManagerEvent e) {
-        Emulator.getGameEnvironment().getItemManager().addItemInteraction(new ItemInteraction("slots_machine", InteractionSlotMachine.class));
-        Emulator.getGameEnvironment().getItemManager().addItemInteraction(new ItemInteraction("yt_jukebox", InteractionYoutubeJukebox.class));
+        Emulator.getGameEnvironment().getItemManager()
+                .addItemInteraction(new ItemInteraction("slots_machine", InteractionSlotMachine.class));
+        Emulator.getGameEnvironment().getItemManager()
+                .addItemInteraction(new ItemInteraction("yt_jukebox", InteractionYoutubeJukebox.class));
     }
 
     @EventHandler
     public void onUserEnterRoomEvent(UserEnterRoomEvent e) {
         RoomPlaylist playlist = JSPlugin.getInstance().getRoomAudioManager().getPlaylistForRoom(e.room.getId());
         // here send the playlist to the user
-        if(playlist.getPlaylist().size() > 0) {
+        if (playlist.getPlaylist().size() > 0) {
             e.habbo.getClient().sendResponse(new JavascriptCallbackComposer(new PlaylistComposer(playlist)));
-            if(playlist.isPlaying()) {
-                e.habbo.getClient().sendResponse(new JavascriptCallbackComposer(new PlaySongComposer(playlist.getCurrentIndex())));
+            if (playlist.isPlaying()) {
+                e.habbo.getClient()
+                        .sendResponse(new JavascriptCallbackComposer(new PlaySongComposer(playlist.getCurrentIndex())));
                 e.habbo.getClient().sendResponse(playlist.getNowPlayingBubbleAlert());
             }
         }
@@ -87,24 +100,33 @@ public class main extends HabboPlugin implements EventListener {
         JSPlugin.getInstance().getRoomAudioManager().dispose(e.room.getId());
     }
 
-    /* Trash
-    @EventHandler
-    public void onUserTalkEvent(UserTalkEvent e) {
-        String userMentioned = RegexUtility.getUserMentionedFromChat(e.chatMessage.getMessage());
-        if(!userMentioned.isEmpty()) {
-            Habbo habbo = Emulator.getGameEnvironment().getHabboManager().getHabbo(userMentioned);
-
-            if (habbo != null) {
-                MentionComposer msg = new MentionComposer(e.habbo.getHabboInfo().getUsername(), e.chatMessage.getMessage());
-                habbo.getClient().sendResponse(new JavascriptCallbackComposer(msg));
-                e.habbo.whisper("You mentioned " + userMentioned, RoomChatMessageBubbles.ALERT);
-            }
-        }
-    }
-    */
+    /*
+     * Trash
+     *
+     * @EventHandler
+     * public void onUserTalkEvent(UserTalkEvent e) {
+     * String userMentioned =
+     * RegexUtility.getUserMentionedFromChat(e.chatMessage.getMessage());
+     * if(!userMentioned.isEmpty()) {
+     * Habbo habbo =
+     * Emulator.getGameEnvironment().getHabboManager().getHabbo(userMentioned);
+     *
+     * if (habbo != null) {
+     * MentionComposer msg = new
+     * MentionComposer(e.habbo.getHabboInfo().getUsername(),
+     * e.chatMessage.getMessage());
+     * habbo.getClient().sendResponse(new JavascriptCallbackComposer(msg));
+     * e.habbo.whisper("You mentioned " + userMentioned,
+     * RoomChatMessageBubbles.ALERT);
+     * }
+     * }
+     * }
+     */
     @EventHandler
     public void onUserLoginEvent(UserLoginEvent e) {
-        SessionDataComposer sessionDataComposer = new SessionDataComposer(e.habbo.getHabboInfo().getId(), e.habbo.getHabboInfo().getUsername(), e.habbo.getHabboInfo().getLook(), e.habbo.getHabboInfo().getCredits());
+        SessionDataComposer sessionDataComposer = new SessionDataComposer(e.habbo.getHabboInfo().getId(),
+                e.habbo.getHabboInfo().getUsername(), e.habbo.getHabboInfo().getLook(),
+                e.habbo.getHabboInfo().getCredits());
         e.habbo.getClient().sendResponse(new JavascriptCallbackComposer(sessionDataComposer));
     }
 
