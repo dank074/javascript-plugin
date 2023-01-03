@@ -1,5 +1,6 @@
 package com.skeletor.plugin.javascript.commands;
 
+import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.commands.Command;
 import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.rooms.Room;
@@ -9,26 +10,31 @@ import com.skeletor.plugin.javascript.override_packets.outgoing.JavascriptCallba
 import com.skeletor.plugin.javascript.utils.RegexUtility;
 
 public class YoutubeCommand extends Command {
-    public YoutubeCommand(){
-        super("cmd_youtube", new String[] {"youtube"});
+    public YoutubeCommand() {
+        super("cmd_youtube", Emulator.getTexts().getValue("javascript.cmd.youtube.keys").split(";"));
     }
+
     @Override
     public boolean handle(GameClient gameClient, String[] strings) throws Exception {
         Room room = gameClient.getHabbo().getHabboInfo().getCurrentRoom();
 
-        if(room.hasRights(gameClient.getHabbo()) || gameClient.getHabbo().getHabboInfo().getRank().getName().equals("VIP")) {
-            if (strings.length > 1) {
-                String videoId = RegexUtility.getYouTubeId(strings[1]);
-                if(videoId.isEmpty()) {
-                    gameClient.getHabbo().whisper("Invalid youtube url");
-                    return true;
-                }
-                OutgoingWebMessage webMsg = new YoutubeTVComposer(videoId);
-                room.sendComposer(new JavascriptCallbackComposer(webMsg).compose());
-                return true;
-            }
+        if (room == null)
+            return false;
+
+        if (strings.length == 1) {
+            gameClient.getHabbo().whisper(Emulator.getTexts().getValue("javascript.cmd.youtube.usage"));
+            return true;
         }
-        gameClient.getHabbo().whisper("You do not have permission to use this command in this room");
+
+        String videoId = RegexUtility.getYouTubeId(strings[1]);
+
+        if (videoId.isEmpty()) {
+            gameClient.getHabbo().whisper(Emulator.getTexts().getValue("javascript.cmd.youtube.invalid"));
+            return true;
+        }
+
+        OutgoingWebMessage webMsg = new YoutubeTVComposer(videoId);
+        room.sendComposer(new JavascriptCallbackComposer(webMsg).compose());
         return true;
     }
 }
