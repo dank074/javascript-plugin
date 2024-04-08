@@ -6,6 +6,8 @@ import gnu.trove.map.hash.THashMap;
 
 import java.util.ArrayList;
 
+import static com.skeletor.plugin.javascript.utils.RegexUtility.sanitize;
+
 public class RoomPlaylist {
     private ArrayList<YoutubeVideo> playlist;
     private int current;
@@ -48,9 +50,9 @@ public class RoomPlaylist {
         YoutubeVideo res = null;
         if(playlist.size() - 1 >= index)
             res = this.playlist.remove(index);
-        if(playlist.size() == 0) this.setPlaying(false);
+        if(playlist.isEmpty()) this.setPlaying(false);
         if(index == this.getCurrentIndex()) {
-            if(index > this.playlist.size() - 1 && this.playlist.size() > 0) {
+            if(index > this.playlist.size() - 1 && !this.playlist.isEmpty()) {
                 this.current = this.playlist.size() - 1;
             }
         }
@@ -85,10 +87,10 @@ public class RoomPlaylist {
     }
 
     public MessageComposer getNowPlayingBubbleAlert() {
-        final THashMap<String, String> keys = (THashMap<String, String>)new THashMap();
+        final THashMap<String, String> keys = new THashMap<>();
         keys.put("display", "BUBBLE");
         keys.put("image", ("${image.library.url}notifications/music.png"));
-        keys.put("message", "Now playing " + this.getCurrentSong().name);
-       return new BubbleAlertComposer("", (THashMap)keys);
+        keys.put("message", "Now playing " + sanitize(this.getCurrentSong().name));
+       return new BubbleAlertComposer("", keys);
     }
 }
